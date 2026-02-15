@@ -67,9 +67,12 @@ def _download_nasdaq_symbols(timeout):
     # However, this measure is probably temporary until the read_csv
     # behavior is better formalized.
     with warnings.catch_warnings(record=True):
+        # As of pandas 2.0, several positional arguments in read_csv
+        # have been converted to keyword-only. We explicitly name 'sep'
+        # to ensure compatibility and use the defined _DELIMITER for clarity.
         data = read_csv(
             StringIO("\n".join(lines[:-1])),
-            "|",
+            sep=_DELIMITER,
             dtype=_TICKER_DTYPE,
             converters=converter_map,
             index_col=1,
